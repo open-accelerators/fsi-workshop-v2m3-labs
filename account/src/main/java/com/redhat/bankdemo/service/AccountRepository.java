@@ -22,6 +22,7 @@ public class AccountRepository {
     rs.getString("type"),
     rs.getString("description"),
     rs.getBigDecimal("balance"),
+    rs.getDate("balanceDate"),
     rs.getBigDecimal("creditLine"),
     rs.getBigDecimal("beginBalance"),
     rs.getDate("beginBalanceTimestamp")
