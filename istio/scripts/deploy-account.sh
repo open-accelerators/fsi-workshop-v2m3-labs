@@ -10,30 +10,43 @@ if [ -z "$USERXX" -o "$USERXX" = "userXX" ]
 fi
 
 echo Your username is $USERXX
-echo Deploy account service........
+echo Deploy Account service........
 
 oc project $USERXX-account || oc new-project $USERXX-account
+
 oc delete dc,bc,build,svc,route,pod,is --all
 
 echo "Waiting 30 seconds to finialize deletion of resources..."
 sleep 30
 
-sed -i "s/userXX/${USERXX}/g" $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/src/main/resources/application-openshift.properties
-mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account
+rm -rf /projects/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
+cp /projects/fsi-workshop-v2m3-labs/istio/scripts/application-default.properties /projects/fsi-workshop-v2m3-labs/account/src/main/resources/
+sed -i "s/userXX/${USERXX}/g" /projects/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
+
+cd /projects/fsi-workshop-v2m3-labs/account/
 
 oc new-app -e POSTGRESQL_USER=account \
              -e POSTGRESQL_PASSWORD=mysecretpassword \
              -e POSTGRESQL_DATABASE=account \
-             openshift/postgresql:latest \
+             openshift/postgresql:10 \
              --name=account-database
 
-oc new-build registry.access.redhat.com/ubi8/openjdk-11 --binary --name=account-springboot -l app=account-springboot
+mvn clean package spring-boot:repackage -DskipTests
+
+oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=account-springboot -l app=account-springboot
 
 if [ ! -z $DELAY ]
-  then
+  then 
     echo Delay is $DELAY
     sleep $DELAY
 fi
 
-oc start-build account-springboot --from-file $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/target/account-1.0.0-SNAPSHOT.jar --follow
-oc new-app account-springboot -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
+oc start-build account-springboot --from-file=target/account-1.0.0-SNAPSHOT.jar --follow
+oc new-app account-springboot
+oc expose service account-springboot
+
+clear
+echo "Done! Verify by accessing in your browser:"
+echo
+echo "http://$(oc get route account-springboot -o=go-template --template='{{ .spec.host }}')"
+echo
