@@ -42,7 +42,7 @@ public class AccountService {
     }
 
     private void updateBalanceOnTransactionClient(Account account) {
-        JSONArray jsonArray = new JSONArray(this.transactionClient.checkBalance(account.getAccountId()));
+        JSONArray jsonArray = new JSONArray("[" + transactionClient.checkBalance(account.getAccountId()) + "]");
         List<String> balance = IntStream.range(0, jsonArray.length())
         .mapToObj(index -> ((JSONObject)jsonArray.get(index))
         .optString("balance")).collect(Collectors.toList());
