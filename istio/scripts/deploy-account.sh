@@ -27,7 +27,7 @@ oc new-app --as-deployment-config -e POSTGRESQL_USER=account \
              openshift/postgresql:10 \
              --name=account-database
 
-oc new-build registry.access.redhat.com/ubi8/openjdk-11:1.3 --binary --name=account-springboot -l app=account-springboot
+oc new-build registry.access.redhat.com/ubi8/openjdk-11 --binary --name=account-springboot -l app=account-springboot
 
 if [ ! -z $DELAY ]
   then 
@@ -35,7 +35,7 @@ if [ ! -z $DELAY ]
     sleep $DELAY
 fi
 
-oc start-build account-springboot --from-file=target/account-1.0.0-SNAPSHOT.jar --follow
+oc start-build account-springboot --from-file=$CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/target/account-1.0.0-SNAPSHOT.jar --follow
 oc new-app account-springboot --as-deployment-config -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
 
 oc label dc/account-database app.openshift.io/runtime=postgresql --overwrite && \
