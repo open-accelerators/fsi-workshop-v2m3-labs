@@ -13,27 +13,22 @@ echo Your username is $USERXX
 echo Deploy Transaction service........
 
 oc project $USERXX-transaction || oc new-project $USERXX-transaction
-
 oc delete deployment,dc,bc,build,svc,route,pod,is --all
 
-cd $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/transaction/
-
-mvn clean package -DskipTests
+echo "Waiting 30 seconds to finialize deletion of resources..."
+sleep 30
 
 oc new-app -e POSTGRESQL_USER=transaction \
   -e POSTGRESQL_PASSWORD=mysecretpassword \
   -e POSTGRESQL_DATABASE=transaction openshift/postgresql:10 \
   --name=transaction-database
 
-oc new-build registry.access.redhat.com/ubi8/openjdk-11:1.3 --binary --name=transaction-quarkus -l app=transaction-quarkus
+mvn clean package -DskipTests -f $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/transaction
 
-if [ ! -z $DELAY ]
-  then 
-    echo Delay is $DELAY
-    sleep $DELAY
-fi
+oc delete route transaction
 
-rm -rf target/binary && mkdir -p target/binary && cp -r target/*runner.jar target/binary
-oc start-build transaction-quarkus --from-dir=target/binary --follow
-oc new-app transaction-quarkus -e QUARKUS_PROFILE=prod
-oc expose service transaction-quarkus
+oc label dc/transaction-database app.openshift.io/runtime=postgresql --overwrite && \
+oc label dc/transaction app.kubernetes.io/part-of=transaction --overwrite && \
+oc label dc/transaction-database app.kubernetes.io/part-of=transaction --overwrite && \
+oc annotate dc/transaction app.openshift.io/connects-to=transaction-database --overwrite && \
+oc annotate dc/transaction app.openshift.io/vcs-ref=ocp-4.5 --overwrite
