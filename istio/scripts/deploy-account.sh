@@ -14,7 +14,7 @@ echo Deploy Account service........
 
 oc project $USERXX-account || oc new-project $USERXX-account
 
-oc delete dc,bc,build,svc,route,pod,is --all
+oc delete deployment,dc,bc,build,svc,route,pod,is --all
 
 echo "Waiting 30 seconds to finialize deletion of resources..."
 sleep 30
@@ -33,7 +33,7 @@ oc new-app -e POSTGRESQL_USER=account \
 
 mvn clean package spring-boot:repackage -DskipTests
 
-oc new-build registry.redhat.io/ubi8/openjdk-11 --binary --name=account-springboot -l app=account-springboot
+oc new-build registry.access.redhat.com/ubi8/openjdk-11:1.3 --binary --name=account-springboot -l app=account-springboot
 
 if [ ! -z $DELAY ]
   then 
