@@ -22,16 +22,6 @@ public class AccountRepositoryTest {
   @Autowired
   AccountRepository repository;
 
-  //TODO: Insert test_readOne here
-  @Test
-  public void test_readOne() {
-    Account account = repository.findById("5006");
-    assertThat(account).isNotNull();
-    assertThat(account.getType()).as("Verify account type").isEqualTo("Checking");
-    assertThat(account.getBalance()).as("Check account balance").isEqualTo(new BigDecimal("2458.32"));
-    assertThat(account.getCreditLine()).as("Check account credit line").isEqualTo(new BigDecimal("0.00"));
-  }
-
   //TODO: Insert test_readAll here
   @Test
   public void test_readAll() {
