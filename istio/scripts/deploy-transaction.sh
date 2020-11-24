@@ -25,7 +25,7 @@ oc new-app -e POSTGRESQL_USER=transaction \
   -e POSTGRESQL_DATABASE=transaction openshift/postgresql:10 \
   --name=transaction-database
 
-oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.8 --binary --name=transaction-quarkus -l app=transaction-quarkus
+oc new-build registry.access.redhat.com/ubi8/openjdk-11:1.3 --binary --name=transaction-quarkus -l app=transaction-quarkus
 
 if [ ! -z $DELAY ]
   then 
