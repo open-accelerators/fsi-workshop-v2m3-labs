@@ -19,11 +19,11 @@ oc delete dc,bc,build,svc,route,pod,is --all
 echo "Waiting 30 seconds to finialize deletion of resources..."
 sleep 30
 
-rm -rf /projects/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
-cp /projects/fsi-workshop-v2m3-labs/istio/scripts/application-default.properties /projects/fsi-workshop-v2m3-labs/account/src/main/resources/
-sed -i "s/userXX/${USERXX}/g" /projects/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
+rm -rf $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
+cp $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/istio/scripts/application-default.properties $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/src/main/resources/
+sed -i "s/userXX/${USERXX}/g" $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
 
-cd /projects/fsi-workshop-v2m3-labs/account/
+cd $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/
 
 oc new-app -e POSTGRESQL_USER=account \
              -e POSTGRESQL_PASSWORD=mysecretpassword \
