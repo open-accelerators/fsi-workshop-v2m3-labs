@@ -43,5 +43,5 @@ oc label dc/account-springboot app.openshift.io/runtime=spring --overwrite && \
 oc label dc/account-springboot app.kubernetes.io/part-of=account --overwrite && \
 oc label deployment/account-database app.kubernetes.io/part-of=account --overwrite && \
 oc annotate dc/account-springboot app.openshift.io/connects-to=account-database --overwrite && \
-oc annotate dc/account-springboot app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git --overwrite && \
+oc annotate dc/account-springboot app.openshift.io/vcs-uri=https://github.com/rmarins/fsi-workshop-v2m3-labs.git --overwrite && \
 oc annotate dc/account-springboot app.openshift.io/vcs-ref=ocp-4.5 --overwrite
