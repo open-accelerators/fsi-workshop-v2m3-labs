@@ -26,8 +26,8 @@ public class TransactionResource {
   }
 
   @GET
-  @Path("/{accountId}")
-  public List<Transaction> listByAccountId(@PathParam String accountId) {
+  @Path("{accountId}")
+  public List<Transaction> findByAccountId(@PathParam String accountId) {
     return Transaction.listByAccountId(accountId);
   }
 
