@@ -14,7 +14,7 @@ echo Deploy Transaction service........
 
 oc project $USERXX-transaction || oc new-project $USERXX-transaction
 
-oc delete dc,bc,build,svc,route,pod,is --all
+oc delete deployment,dc,bc,build,svc,route,pod,is --all
 
 cd $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/transaction/
 
@@ -24,8 +24,8 @@ oc new-app -e POSTGRESQL_USER=transaction \
   -e POSTGRESQL_PASSWORD=mysecretpassword \
   -e POSTGRESQL_DATABASE=transaction openshift/postgresql:10 \
   --name=transaction-database
-  
-oc new-build registry.redhat.io/ubi8/openjdk-11 --binary --name=transaction-quarkus -l app=transaction-quarkus
+
+oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.8 --binary --name=transaction-quarkus -l app=transaction-quarkus
 
 if [ ! -z $DELAY ]
   then 
