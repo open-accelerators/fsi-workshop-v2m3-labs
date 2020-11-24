@@ -38,10 +38,10 @@ fi
 oc start-build account-springboot --from-file=target/account-1.0.0-SNAPSHOT.jar --follow
 oc new-app account-springboot --as-deployment-config -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
 
-oc label dc/catalog-database app.openshift.io/runtime=postgresql --overwrite && \
-oc label dc/catalog-springboot app.openshift.io/runtime=spring --overwrite && \
-oc label dc/catalog-springboot app.kubernetes.io/part-of=catalog --overwrite && \
-oc label dc/catalog-database app.kubernetes.io/part-of=catalog --overwrite && \
-oc annotate dc/catalog-springboot app.openshift.io/connects-to=catalog-database --overwrite && \
-oc annotate dc/catalog-springboot app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git --overwrite && \
-oc annotate dc/catalog-springboot app.openshift.io/vcs-ref=ocp-4.5 --overwrite
+oc label deployment/account-database app.openshift.io/runtime=postgresql --overwrite && \
+oc label dc/account-springboot app.openshift.io/runtime=spring --overwrite && \
+oc label dc/account-springboot app.kubernetes.io/part-of=account --overwrite && \
+oc label deployment/account-database app.kubernetes.io/part-of=account --overwrite && \
+oc annotate dc/account-springboot app.openshift.io/connects-to=account-database --overwrite && \
+oc annotate dc/account-springboot app.openshift.io/vcs-uri=https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git --overwrite && \
+oc annotate dc/account-springboot app.openshift.io/vcs-ref=ocp-4.5 --overwrite
