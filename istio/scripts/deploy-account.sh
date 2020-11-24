@@ -33,7 +33,7 @@ oc new-app -e POSTGRESQL_USER=account \
 
 mvn clean package spring-boot:repackage -DskipTests
 
-oc new-build registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.5 --binary --name=account-springboot -l app=account-springboot
+oc new-build registry.redhat.io/ubi8/openjdk-11 --binary --name=account-springboot -l app=account-springboot
 
 if [ ! -z $DELAY ]
   then 
