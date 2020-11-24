@@ -32,10 +32,10 @@
             </center>
             <table class="table table-bordered" id="accounts" border='1'>
                 <tr>
-                    <th>Account ID</th>
-                    <th>Description</th>
+                    <th>Account Name</th>
+                    <th>Account Number</th>
                     <th>Balance</th>
-                    <th>Credit Line</th>
+                    <th>Available Credit</th>
                 </tr>
             </table>
             <hr>
@@ -87,10 +87,10 @@
                     $.each(data, function (i, account) {
 
                         trHTML += '<tr>' +
-                            '<td><strong>' + account.accountId + '</strong></td>' +
                             '<td>' + account.description + '</a></td>' +
-                            '<td>' + account.balance + '</a></td>' +
-                            '<td>' + account.creditLine + '</a></td>' +
+                            '<td align="middle">' + account.accountId + '</td>' +
+                            '<td align="right">$' + account.balance.toFixed(2) + '</a></td>' +
+                            '<td align="right">$' + account.remainingCredit.toFixed(2) + '</a></td>' +
                             '</tr>';
                     });
 
