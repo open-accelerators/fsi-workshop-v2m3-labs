@@ -19,9 +19,9 @@ echo "Waiting 30 seconds to finialize deletion of resources..."
 sleep 30
 
 sed -i "s/userXX/${USERXX}/g" $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account/src/main/resources/application-default.properties
-mvn clean package spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account
+mvn clean install spring-boot:repackage -DskipTests -f $CHE_PROJECTS_ROOT/fsi-workshop-v2m3-labs/account
 
-oc new-app -e POSTGRESQL_USER=account \
+oc new-app --as-deployment-config -e POSTGRESQL_USER=account \
              -e POSTGRESQL_PASSWORD=mysecretpassword \
              -e POSTGRESQL_DATABASE=account \
              openshift/postgresql:10 \
@@ -38,10 +38,10 @@ fi
 oc start-build account-springboot --from-file=target/account-1.0.0-SNAPSHOT.jar --follow
 oc new-app account-springboot --as-deployment-config -e JAVA_OPTS_APPEND='-Dspring.profiles.active=openshift'
 
-oc label deployment/account-database app.openshift.io/runtime=postgresql --overwrite && \
+oc label dc/account-database app.openshift.io/runtime=postgresql --overwrite && \
 oc label dc/account-springboot app.openshift.io/runtime=spring --overwrite && \
 oc label dc/account-springboot app.kubernetes.io/part-of=account --overwrite && \
-oc label deployment/account-database app.kubernetes.io/part-of=account --overwrite && \
+oc label dc/account-database app.kubernetes.io/part-of=account --overwrite && \
 oc annotate dc/account-springboot app.openshift.io/connects-to=account-database --overwrite && \
 oc annotate dc/account-springboot app.openshift.io/vcs-uri=https://github.com/rmarins/fsi-workshop-v2m3-labs.git --overwrite && \
 oc annotate dc/account-springboot app.openshift.io/vcs-ref=ocp-4.5 --overwrite
