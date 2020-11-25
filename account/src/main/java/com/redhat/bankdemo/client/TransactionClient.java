@@ -18,7 +18,7 @@ public interface TransactionClient {
     class TransactionClientFallbackFactory implements FallbackFactory<TransactionClient> {
       @Override
       public TransactionClient create(Throwable cause) {
-        return accountId -> "[{'balance':0, 'balanceDateTime':'January 1, 1970, 00:00:00 GMT'}]";
+        return accountId -> "{'balance':0, 'balanceDateTime':'January 1, 1970, 00:00:00 GMT'}";
       }
     }
 
